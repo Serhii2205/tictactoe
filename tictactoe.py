@@ -97,15 +97,25 @@ class TicTacToe:
         for combination in self.win_combinations:
             if set_values.issuperset(combination):
                 print(f'Player {player_number} has won!')
+
+                self.render_final_table(combination)
+
                 print('Game Over')
+
                 return True
+
+    def render_final_table(self, win_combination):
+        for coord in self.coords:
+            if coord['coord'] in win_combination:
+                coord['symbol'] = '\u0336' + coord['symbol'] + '\u0336'
+        print(self.fill_table())
 
 
 if __name__ == "__main__":
     try:
         while True:
             TicTacToe().start_game()
-            again = input('\n' * 3 + 'Do you want to play again ? Y/N:  ')
+            again = input('\n' * 2 + 'Do you want to play again ? Y/N:  ')
             if again.lower() == 'y':
                 continue
             else:
