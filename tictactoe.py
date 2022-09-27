@@ -78,6 +78,8 @@ class TicTacToe:
         return self.create_table().format(*[coord['symbol'] for coord in self.coords])
 
     def start_game(self):
+        print('Welcome to Tic-Tac-Toe game:) \n_______________________________')
+        sleep(0.3)
         self.player_1 = self.validate_input(input('Select symbol for player 1 X or 0:  '))
         self.set_symbol_for_player_2()
 
@@ -126,5 +128,5 @@ if __name__ == "__main__":
                 print('Bye :)')
                 break
     except KeyboardInterrupt as k:
-        print("  Interrupted")
+        print("  Interrupted by user")
         sys.exit(0)
