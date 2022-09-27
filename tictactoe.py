@@ -1,4 +1,5 @@
 import sys
+from time import sleep
 
 
 class TicTacToe:
@@ -69,6 +70,9 @@ class TicTacToe:
                     return True
         else:
             print('Draw!')
+            print(self.fill_table())
+            sleep(0.3)
+            print('Game Over')
 
     def fill_table(self):
         return self.create_table().format(*[coord['symbol'] for coord in self.coords])
@@ -99,7 +103,7 @@ class TicTacToe:
                 print(f'Player {player_number} has won!')
 
                 self.render_final_table(combination)
-
+                sleep(0.3)
                 print('Game Over')
 
                 return True
@@ -119,6 +123,7 @@ if __name__ == "__main__":
             if again.lower() == 'y':
                 continue
             else:
+                print('Bye :)')
                 break
     except KeyboardInterrupt as k:
         print("  Interrupted")
