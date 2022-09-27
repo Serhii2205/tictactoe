@@ -38,7 +38,8 @@ class TicTacToe:
         return border + row * 3 + border
 
     def get_coord(self, row, column, player_symbol):
-        # ToDo add row and column validation
+        self.validate_row_and_column_input(row=row, column=column)
+
         for coord in self.coords:
             if coord['row'] == row and coord['column'] == column:
                 if coord['symbol'] == ' ':
@@ -89,6 +90,12 @@ class TicTacToe:
         while player_input not in self.symbols:
             player_input = input('Error: please enter a valid symbol X or 0:  ')
         return player_input
+
+    @staticmethod
+    def validate_row_and_column_input(**kwargs):
+        for elem in kwargs.items():
+            if not (elem[1].isdigit() and 0 < int(elem[1]) <= 3):
+                print(f'{elem[0].capitalize()} value is out of range. Please re-enter')
 
     def set_symbol_for_player_2(self):
         symbols_copy = self.symbols.copy()
