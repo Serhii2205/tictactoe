@@ -74,8 +74,7 @@ class TicTacToe:
         return self.create_table().format(*[coord['symbol'] for coord in self.coords])
 
     def start_game(self):
-        self.player_1 = input('Select symbol for player 1 X or 0:  ')
-        self.player_1 = self.validate_input(self.player_1)
+        self.player_1 = self.validate_input(input('Select symbol for player 1 X or 0:  '))
         self.set_symbol_for_player_2()
 
         self.make_a_move()
