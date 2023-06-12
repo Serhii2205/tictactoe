@@ -1,22 +1,13 @@
 import sys
 from time import sleep
+from itertools import product
+from functools import cached_property
 
 
 class TicTacToe:
-    step = 1
-    symbols = ['X', '0']
-    coords = [
-        {'row': '1', 'column': '1', 'coord': 1, 'symbol': ' '},
-        {'row': '1', 'column': '2', 'coord': 2, 'symbol': ' '},
-        {'row': '1', 'column': '3', 'coord': 3, 'symbol': ' '},
-        {'row': '2', 'column': '1', 'coord': 4, 'symbol': ' '},
-        {'row': '2', 'column': '2', 'coord': 5, 'symbol': ' '},
-        {'row': '2', 'column': '3', 'coord': 6, 'symbol': ' '},
-        {'row': '3', 'column': '1', 'coord': 7, 'symbol': ' '},
-        {'row': '3', 'column': '2', 'coord': 8, 'symbol': ' '},
-        {'row': '3', 'column': '3', 'coord': 9, 'symbol': ' '},
-    ]
-    win_combinations = [
+    STEP = 1
+    SYMBOLS = ['X', '0']
+    WIN_COMBINATIONS = [
         {1, 2, 3},
         {4, 5, 6},
         {7, 8, 9},
@@ -31,16 +22,34 @@ class TicTacToe:
         self.player_1 = None
         self.player_2 = None
 
+    @cached_property
+    def coordinates(self):
+        return self.create_coords()
+
+    @staticmethod
+    def create_coords():
+        coordinates = []
+        comb = list(map(str, range(1, 4)))
+
+        for coord, combination in enumerate(product(comb, comb), start=1):
+            row, column = combination
+            coordinates.append(
+                {'row': row, 'column': column, 'coord': coord, 'symbol': ' '}
+            )
+
+        return coordinates
+
     @staticmethod
     def create_table():
         border = "---------\n"
         row = "| {} {} {} |\n"
+
         return border + row * 3 + border
 
-    def get_coord(self, row, column, player_symbol):
+    def get_coord(self, row: int, column: int, player_symbol: str):
         self.validate_row_and_column_input(row=row, column=column)
 
-        for coord in self.coords:
+        for coord in self.coordinates:
             if coord['row'] == row and coord['column'] == column:
                 if coord['symbol'] == ' ':
                     coord['symbol'] = player_symbol
@@ -50,8 +59,8 @@ class TicTacToe:
 
     def make_a_move(self):
         for _ in range(9):
-            player_number = 1 if self.step % 2 != 0 else 2
-            player_symbol = self.player_1 if self.step % 2 != 0 else self.player_2
+            player_number = 1 if self.STEP % 2 != 0 else 2
+            player_symbol = self.player_1 if self.STEP % 2 != 0 else self.player_2
             coord = None
 
             while not coord:
@@ -64,9 +73,9 @@ class TicTacToe:
                     print('Invalid format. Please re-enter')
 
             print(self.fill_table())
-            self.step += 1
+            self.STEP += 1
 
-            if self.step > 5:
+            if self.STEP > 5:
                 if self.check_win(player_symbol, player_number):
                     return True
         else:
@@ -76,19 +85,20 @@ class TicTacToe:
             print('Game Over')
 
     def fill_table(self):
-        return self.create_table().format(*[coord['symbol'] for coord in self.coords])
+        return self.create_table().format(*[coord['symbol'] for coord in self.coordinates])
 
     def start_game(self):
         print('Welcome to Tic-Tac-Toe game:) \n_______________________________')
         sleep(0.3)
-        self.player_1 = self.validate_input(input('Select symbol for player 1 X or 0:  '))
+        self.player_1 = self.validate_input(input("Select symbol for player 1 'X' or '0':  "))
         self.set_symbol_for_player_2()
 
         self.make_a_move()
 
-    def validate_input(self, player_input):
-        while player_input not in self.symbols:
+    def validate_input(self, player_input: str):
+        while player_input not in self.SYMBOLS:
             player_input = input('Error: please enter a valid symbol X or 0:  ')
+
         return player_input
 
     @staticmethod
@@ -98,16 +108,16 @@ class TicTacToe:
                 print(f'{elem[0].capitalize()} value is out of range. Please re-enter')
 
     def set_symbol_for_player_2(self):
-        symbols_copy = self.symbols.copy()
+        symbols_copy = self.SYMBOLS.copy()
         self.player_2 = (
             symbols_copy.remove(self.player_1), symbols_copy[0]
         )[1]
 
     def check_win(self, player_char, player_number):
         set_values = {
-            coord['coord'] for coord in self.coords if player_char == coord['symbol']
+            coord['coord'] for coord in self.coordinates if player_char == coord['symbol']
         }
-        for combination in self.win_combinations:
+        for combination in self.WIN_COMBINATIONS:
             if set_values.issuperset(combination):
                 print(f'Player {player_number} has won!')
 
@@ -118,7 +128,7 @@ class TicTacToe:
                 return True
 
     def render_final_table(self, win_combination):
-        for coord in self.coords:
+        for coord in self.coordinates:
             if coord['coord'] in win_combination:
                 coord['symbol'] = '\u0336' + coord['symbol'] + '\u0336'
         print(self.fill_table())
