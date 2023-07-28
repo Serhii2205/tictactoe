@@ -96,7 +96,6 @@ class TicTacToe:
             input("Select symbol for player 1 'X' or '0':  ")
         )
         self.set_symbol_for_player_2()
-
         self.make_a_move()
 
     def validate_input(self, player_input: str):
