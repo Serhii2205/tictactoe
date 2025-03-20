@@ -142,9 +142,7 @@ if __name__ == "__main__":
         while True:
             TicTacToe().start_game()
             again = input("\n" * 2 + "Do you want to play again ? Y/N:  ")
-            if again.lower() == "y":
-                continue
-            else:
+            if again.lower() != "y":
                 print("Bye :)")
                 break
     except KeyboardInterrupt as k:
